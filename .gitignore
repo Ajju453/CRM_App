@@ -1,0 +1,9 @@
+node_modules/
+dist/
+data/
+*.db
+*.db-journal
+branch-app/android/app/build/
+branch-app/android/.gradle/
+branch-app/android/local.properties
+.env

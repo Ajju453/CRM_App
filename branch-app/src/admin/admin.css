@@ -1,0 +1,304 @@
+/* Admin screens. Phone layout only. Every class uses the adm- prefix so it never clashes with the branch styles. */
+
+.adm-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: #f4f5f7;
+  color: #1e293b;
+}
+
+.adm-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.adm-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #b91c1c;
+}
+
+.adm-content {
+  flex: 1;
+  padding: 16px 16px 96px;
+}
+
+.adm-tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+.adm-tabbar button {
+  flex: 1;
+  padding: 14px 8px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.adm-tabbar button.active {
+  color: #b91c1c;
+  box-shadow: inset 0 3px 0 #b91c1c;
+}
+
+.adm-link {
+  background: none;
+  border: 0;
+  color: #b91c1c;
+  font: inherit;
+  font-weight: 600;
+  padding: 6px 4px;
+  cursor: pointer;
+}
+
+.adm-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.adm-subhead {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.adm-section {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 24px 0 0;
+}
+
+.adm-muted {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 4px 0 0;
+}
+
+.adm-alert,
+.adm-notice {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.adm-alert {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.adm-notice {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.adm-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.adm-card-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.adm-card-link:active {
+  background: #f8fafc;
+}
+
+.adm-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.adm-stats .adm-card {
+  margin-top: 0;
+}
+
+.adm-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.adm-stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.adm-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.adm-label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.adm-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 16px; /* 16px stops iOS from zooming in on focus */
+  background: #fff;
+}
+
+.adm-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.adm-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 11px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.adm-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.adm-btn-primary {
+  background: #b91c1c;
+  color: #fff;
+}
+
+.adm-btn-danger {
+  background: #fff;
+  color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.adm-btn-ghost {
+  background: #fff;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.adm-back {
+  margin-bottom: 12px;
+}
+
+.adm-mono {
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+.adm-table-wrap {
+  overflow-x: auto;
+  margin-top: 12px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.adm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.adm-table th,
+.adm-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  white-space: nowrap;
+}
+
+.adm-table th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: #64748b;
+  background: #f8fafc;
+}
+
+.adm-table .num {
+  text-align: right;
+}
+
+.adm-table tr.removed td {
+  color: #94a3b8;
+}
+
+.adm-empty {
+  margin: 12px 0 0;
+  padding: 16px;
+  font-size: 0.9rem;
+  color: #64748b;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.adm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.adm-modal {
+  width: 100%;
+  max-width: 380px;
+  box-sizing: border-box;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+}

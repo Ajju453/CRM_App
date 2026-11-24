@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: balaji-tiles-api
+    runtime: node
+    rootDir: backend
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.13.0
+      - key: DB_FILE
+        value: /var/data/balaji.db
+      - key: CORS_ORIGINS
+        value: https://localhost
+    disk:
+      name: balaji-data
+      mountPath: /var/data
+      sizeGB: 1
