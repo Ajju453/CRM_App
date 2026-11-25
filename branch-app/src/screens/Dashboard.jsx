@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { formatRupees } from '../api.js';
 
-export default function Dashboard({ call }) {
+export default function Dashboard({ call, branchName }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -18,7 +19,7 @@ export default function Dashboard({ call }) {
         setError('');
       })
       .catch((err) => setError(err.message));
-  }, [call, from, to]);
+  }, [call, from, to, reloadKey]);
 
   if (error) return <p className="error">{error}</p>;
   if (!data) return <p className="muted">Loading...</p>;
@@ -38,11 +39,10 @@ export default function Dashboard({ call }) {
 
       <h2>Overview</h2>
       <div className="cards">
-        <Card label="Members" value={data.totalMembers} />
-        <Card label="Bought" value={data.membersWithPurchase} />
-        <Card label="No purchase" value={data.membersWithoutPurchase} />
-        <Card label="Bills" value={data.totalBills} />
-        <Card label="Total sales" value={formatRupees(data.totalSales)} wide />
+        <Card label="Total Members" value={data.totalMembers} />
+        <Card label="Total Bills" value={data.totalBills} />
+        <Card label="Total Purchase Value" value={formatRupees(data.totalSales)} />
+        <Card label="Active Branch" value={branchName || '-'} />
       </div>
 
       <h2>Monthly sales</h2>
@@ -68,7 +68,12 @@ export default function Dashboard({ call }) {
           </tbody>
         </table>
       )}
-      <h2>Purchase history</h2>
+      <div className="row between">
+        <h2>Purchase History</h2>
+        <button type="button" className="secondary small" onClick={() => setReloadKey((k) => k + 1)}>
+          Refresh Data
+        </button>
+      </div>
       {data.history.length === 0 ? (
         <p className="muted">No purchases in this period.</p>
       ) : (
@@ -118,9 +123,9 @@ function groupByMonth(rows) {
   return [...groups.entries()];
 }
 
-function Card({ label, value, wide }) {
+function Card({ label, value }) {
   return (
-    <div className={`card${wide ? ' wide' : ''}`}>
+    <div className="card">
       <span className="muted">{label}</span>
       <strong>{value}</strong>
     </div>

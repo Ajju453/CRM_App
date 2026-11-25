@@ -18,7 +18,7 @@ function emptyForm(branchName, memberId = '') {
   };
 }
 
-export default function Bills({ call, branchName, presetMemberId = '' }) {
+export default function Bills({ call, branchName, presetMemberId = '', onBack }) {
   const [members, setMembers] = useState([]);
   const [bills, setBills] = useState([]);
   const [form, setForm] = useState(() => emptyForm(branchName, presetMemberId));
@@ -94,10 +94,25 @@ export default function Bills({ call, branchName, presetMemberId = '' }) {
   }
 
   const isExisting = form.mode === 'existing';
+  const selected = presetMemberId
+    ? members.find((m) => String(m.id) === String(presetMemberId))
+    : null;
 
   return (
     <section>
-      <h2>Add bill</h2>
+      <div className="row between">
+        <h2>Add Bill</h2>
+        {onBack && (
+          <button type="button" className="secondary small" onClick={onBack}>Back to members</button>
+        )}
+      </div>
+      {selected && (
+        <div className="card member-summary">
+          <span className="muted">Selected member</span>
+          <strong>{selected.name}</strong>
+          <span className="muted small-text">{selected.phone} · {selected.occupation}</span>
+        </div>
+      )}
       <form className="form card-form" onSubmit={saveBill}>
         <div className="segmented" role="group" aria-label="Member">
           <button

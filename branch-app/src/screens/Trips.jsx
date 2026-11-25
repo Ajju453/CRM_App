@@ -17,7 +17,7 @@ export default function Trips({ call }) {
   if (loadError) {
     return (
       <section>
-        <h2>Trips</h2>
+        <h2>Trip Eligibility</h2>
         <p className="error" role="alert">{loadError}</p>
       </section>
     );
@@ -25,7 +25,7 @@ export default function Trips({ call }) {
   if (!data) {
     return (
       <section>
-        <h2>Trips</h2>
+        <h2>Trip Eligibility</h2>
         <p className="muted">Loading...</p>
       </section>
     );
@@ -33,7 +33,7 @@ export default function Trips({ call }) {
 
   return (
     <section>
-      <h2>Trips</h2>
+      <h2>Trip Eligibility</h2>
       {data.tiers.map((tier) => {
         const rows = data.qualifiers[tier.id] || [];
         return (

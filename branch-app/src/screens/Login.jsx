@@ -46,12 +46,19 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div className="login">
-      <img className="login-logo" src="/logo.svg" alt="Balaji Tiles" />
-      <h1>Balaji Tiles</h1>
-      <p className="muted">Sign in to continue</p>
+    <div className="auth">
+      <aside className="auth-brand">
+        <img className="auth-logo" src="/logo.svg" alt="Balaji Group logo" />
+        <h2 className="auth-brand-name">BALAJI GROUP</h2>
+        <p className="auth-brand-sub">CONTRACTOR REWARDS PROGRAM</p>
+      </aside>
 
-      <form onSubmit={submit} className="form">
+      <section className="auth-panel">
+        <div className="auth-card">
+          <h1>Welcome <span>Back!</span></h1>
+          <p className="auth-sub">Enter your login details to continue.</p>
+
+          <form onSubmit={submit} className="form">
         <label>
           Username
           <input
@@ -86,10 +93,14 @@ export default function Login({ onLogin }) {
 
         {error && <p className="error" role="alert">{error}</p>}
 
-        <button type="submit" className="primary" disabled={busy}>
-          {busy ? 'Logging in...' : 'Log in'}
-        </button>
-      </form>
+            <button type="submit" className="primary" disabled={busy}>
+              {busy ? 'Logging in...' : 'Log in'}
+            </button>
+          </form>
+        </div>
+
+        <p className="auth-footer">© {new Date().getFullYear()} BALAJI GROUP. All Rights Reserved.</p>
+      </section>
     </div>
   );
 }

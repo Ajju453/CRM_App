@@ -10,11 +10,11 @@ import AdminApp from './admin/AdminApp.jsx';
 import { useOnline } from './useOnline.js';
 
 const TABS = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'members', label: 'Members' },
-  { id: 'bills', label: 'Add bill' },
+  { id: 'dashboard', label: 'Home' },
+  { id: 'add-member', label: 'Add Member' },
+  { id: 'members', label: 'View Member' },
   { id: 'leaderboard', label: 'Leaderboard' },
-  { id: 'trips', label: 'Trips' },
+  { id: 'trips', label: 'Trip Eligibility' },
 ];
 
 export default function App() {
@@ -69,7 +69,7 @@ export default function App() {
     return (
       <div className="login">
         <h1>No internet connection</h1>
-        <p className="muted">Balaji Tiles needs internet. This screen updates when you are back online.</p>
+        <p className="muted">Balaji Group needs internet. This screen updates when you are back online.</p>
       </div>
     );
   }
@@ -84,36 +84,51 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="topbar">
-        <div className="brand">
-          <img className="logo" src="/logo.svg" alt="Balaji Tiles" />
-          <strong>{session.branchName}</strong>
-        </div>
-        <button className="link" onClick={logout}>Log out</button>
-      </header>
+      <div className="app-head">
+        <header className="topbar">
+          <div className="brand">
+            <img className="logo" src="/logo.svg" alt="Balaji Group logo" />
+            <div className="brand-text">
+              <strong className="brand-name">BALAJI GROUP</strong>
+              <span className="brand-sub">CONTRACTOR REWARDS PROGRAM</span>
+            </div>
+          </div>
+          <div className="topbar-user">
+            <span>Welcome, <strong>{session.user.username}</strong></span>
+            <span>Selected Branch: <strong>{session.branchName}</strong></span>
+            <button className="logout" onClick={logout}>Log out</button>
+          </div>
+        </header>
+
+        <nav className="tabbar" aria-label="Main">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              className={tab === t.id ? 'active' : ''}
+              onClick={() => goToTab(t.id)}
+              aria-current={tab === t.id ? 'page' : undefined}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
+      </div>
 
       <main className="content">
-        {tab === 'dashboard' && <Dashboard call={call} />}
-        {tab === 'members' && <Members call={call} onAddBill={addBillFor} />}
+        {tab === 'dashboard' && <Dashboard call={call} branchName={session.branchName} />}
+        {tab === 'add-member' && <Members call={call} mode="add" />}
+        {tab === 'members' && <Members call={call} mode="view" onAddBill={addBillFor} />}
         {tab === 'bills' && (
-          <Bills call={call} branchName={session.branchName} presetMemberId={billMemberId} />
+          <Bills
+            call={call}
+            branchName={session.branchName}
+            presetMemberId={billMemberId}
+            onBack={() => goToTab('members')}
+          />
         )}
         {tab === 'leaderboard' && <Leaderboard call={call} />}
         {tab === 'trips' && <Trips call={call} />}
       </main>
-
-      <nav className="tabbar" aria-label="Main">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            className={tab === t.id ? 'active' : ''}
-            onClick={() => goToTab(t.id)}
-            aria-current={tab === t.id ? 'page' : undefined}
-          >
-            {t.label}
-          </button>
-        ))}
-      </nav>
     </div>
   );
 }

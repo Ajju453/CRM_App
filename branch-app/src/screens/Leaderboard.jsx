@@ -4,6 +4,7 @@ import { formatRupees } from '../api.js';
 export default function Leaderboard({ call }) {
   const [data, setData] = useState(null);
   const [loadError, setLoadError] = useState('');
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     call('/leaderboard')
@@ -31,11 +32,33 @@ export default function Leaderboard({ call }) {
     );
   }
 
+  const query = search.trim().toLowerCase();
+  const ranked = data.top
+    .map((row, index) => ({ ...row, rank: index + 1 }))
+    .filter((row) => !query || row.name.toLowerCase().includes(query) || row.phone.includes(query));
+
   return (
     <section>
-      <h2>Top sellers in your showroom</h2>
-      {data.top.length === 0 ? (
-        <p className="muted">No sales yet.</p>
+      <h2>Leaderboard</h2>
+      <div className="cards">
+        <div className="card">
+          <span className="muted">Ranked Members</span>
+          <strong>{data.top.length}</strong>
+        </div>
+        <div className="card">
+          <span className="muted">Top Seller</span>
+          <strong>{data.top[0] ? data.top[0].name : '-'}</strong>
+        </div>
+      </div>
+      <input
+        className="search"
+        type="search"
+        placeholder="Search by name or phone"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      {ranked.length === 0 ? (
+        <p className="muted">{data.top.length === 0 ? 'No sales yet.' : 'No matches for this search.'}</p>
       ) : (
         <div className="table-wrap">
           <table className="table">
@@ -50,9 +73,9 @@ export default function Leaderboard({ call }) {
               </tr>
             </thead>
             <tbody>
-              {data.top.map((row, index) => (
+              {ranked.map((row) => (
                 <tr key={row.memberId}>
-                  <td className="num">{index + 1}</td>
+                  <td className="num">{row.rank}</td>
                   <td>{row.name}</td>
                   <td>{row.phone}</td>
                   <td>{row.branchName}</td>

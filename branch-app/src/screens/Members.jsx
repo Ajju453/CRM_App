@@ -4,11 +4,11 @@ import { formatRupees } from '../api.js';
 const OCCUPATIONS = ['Contractor', 'Engineer', 'Mistri'];
 const EMPTY_FORM = { name: '', phone: '', address: '', occupation: 'Contractor' };
 
-export default function Members({ call, onAddBill }) {
+export default function Members({ call, mode = 'view', onAddBill }) {
+  const isAdd = mode === 'add';
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState('');
   const [loadError, setLoadError] = useState('');
-  const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [formError, setFormError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -33,11 +33,12 @@ export default function Members({ call, onAddBill }) {
   }
 
   useEffect(() => {
+    if (isAdd) return undefined;
     const timer = setTimeout(loadMembers, 250);
     return () => clearTimeout(timer);
     // loadMembers depends on search and call; the timer debounces typing.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, call]);
+  }, [search, call, isAdd]);
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -50,7 +51,6 @@ export default function Members({ call, onAddBill }) {
     try {
       await call('/members', { method: 'POST', body: form });
       setForm(EMPTY_FORM);
-      setShowForm(false);
       setNotice('Member added');
       await loadMembers();
     } catch (err) {
@@ -78,59 +78,68 @@ export default function Members({ call, onAddBill }) {
 
   return (
     <section>
-      <div className="row between">
-        <h2>Members</h2>
-        <button className="primary small" onClick={() => { setShowForm((v) => !v); setFormError(''); }}>
-          {showForm ? 'Cancel' : 'Add member'}
-        </button>
-      </div>
-
       {notice && <p className="notice">{notice}</p>}
 
-      {showForm && (
-        <form className="form card-form" onSubmit={saveMember}>
-          <label>
-            Name
-            <input value={form.name} onChange={(e) => updateField('name', e.target.value)} required maxLength={100} />
-          </label>
-          <label>
-            Phone
-            <input
-              type="tel"
-              inputMode="tel"
-              value={form.phone}
-              onChange={(e) => updateField('phone', e.target.value)}
-              required
-            />
-          </label>
-          <label>
-            Address
-            <input value={form.address} onChange={(e) => updateField('address', e.target.value)} maxLength={300} />
-          </label>
-          <label>
-            Occupation
-            <select value={form.occupation} onChange={(e) => updateField('occupation', e.target.value)}>
+      {isAdd ? (
+        <>
+          <h2>Add Member</h2>
+          <form className="form card-form" onSubmit={saveMember}>
+            <label>
+              Full Name
+              <input value={form.name} onChange={(e) => updateField('name', e.target.value)} required maxLength={100} />
+            </label>
+            <label>
+              Phone Number
+              <input
+                type="tel"
+                inputMode="tel"
+                value={form.phone}
+                onChange={(e) => updateField('phone', e.target.value)}
+                required
+              />
+            </label>
+            <label>
+              Address
+              <input value={form.address} onChange={(e) => updateField('address', e.target.value)} maxLength={300} />
+            </label>
+            <span className="field-label">Occupation</span>
+            <div className="chips" role="group" aria-label="Occupation">
               {OCCUPATIONS.map((o) => (
-                <option key={o} value={o}>{o}</option>
+                <button
+                  key={o}
+                  type="button"
+                  className={form.occupation === o ? 'chip active' : 'chip'}
+                  aria-pressed={form.occupation === o}
+                  onClick={() => updateField('occupation', o)}
+                >
+                  {o}
+                </button>
               ))}
-            </select>
-          </label>
-          {formError && <p className="error" role="alert">{formError}</p>}
-          <button type="submit" className="primary" disabled={busy}>Save member</button>
-        </form>
+            </div>
+            {formError && <p className="error" role="alert">{formError}</p>}
+            <div className="row end">
+              <button type="button" className="secondary" onClick={() => { setForm(EMPTY_FORM); setFormError(''); }} disabled={busy}>
+                Reset Form
+              </button>
+              <button type="submit" className="primary" disabled={busy}>Register Member</button>
+            </div>
+          </form>
+        </>
+      ) : (
+        <>
+          <h2>View Member</h2>
+          <input
+            className="search"
+            type="search"
+            placeholder="Search by name or phone"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {loadError && <p className="error" role="alert">{loadError}</p>}
+        </>
       )}
 
-      <input
-        className="search"
-        type="search"
-        placeholder="Search by name or phone"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {loadError && <p className="error" role="alert">{loadError}</p>}
-
-      {members.length === 0 ? (
+      {!isAdd && (members.length === 0 ? (
         <p className="muted">No members found.</p>
       ) : (
         <div className="table-wrap">
@@ -161,7 +170,7 @@ export default function Members({ call, onAddBill }) {
                   <td className="num">{formatRupees(m.totalAmount)}</td>
                   <td className="actions">
                     <button className="primary small" onClick={() => onAddBill(m.id)} disabled={busy}>
-                      Add bill
+                      + Add Bill
                     </button>
                     <button className="danger small" onClick={() => setToDelete(m)} disabled={busy}>
                       Delete
@@ -172,7 +181,7 @@ export default function Members({ call, onAddBill }) {
             </tbody>
           </table>
         </div>
-      )}
+      ))}
 
       {detail && (
         <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="detail-title">
